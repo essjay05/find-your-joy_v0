@@ -25,7 +25,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true}, (err) => {
 app.use(express.json());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(flash());
+// app.use(flash());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "client", "build")));
 
