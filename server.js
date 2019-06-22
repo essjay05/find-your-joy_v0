@@ -8,7 +8,7 @@ const
     path = require('path'),
     logger = require('morgan'),
     bodyParser = require('body-parser'),
-    flash = require('connect-flash'),
+    // flash = require('connect-flash'),
     mongoose = require('mongoose'),
     cors = require('cors'),
     MONGODB_URI = process.env.MONGODB_URI,
