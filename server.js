@@ -35,17 +35,17 @@ app.use(express.static(path.join(__dirname, "client", "build")));
 app.get('/api', (req, res) => {
     res.json({ message: "API ROOT" })
 });
-// Require usersRouter
-const usersRouter = require('/.routers/users');
-app.use('/api/users', usersRouter);
-// Require projectsRouter
-const projectsRouter = require('./routers/projects');
-app.use('/api/users/:id/projects', projectsRouter);
+// // Require usersRouter
+// const usersRouter = require('/.routers/users');
+// app.use('/api/users', usersRouter);
+// // Require projectsRouter
+// const projectsRouter = require('./routers/projects');
+// app.use('/api/users/:id/projects', projectsRouter);
 
-// 404 Error/route:
-app.get("*", (req, res) => {
-    res.sendStatus(404);
-});
+// // 404 Error/route:
+// app.get("*", (req, res) => {
+//     res.sendStatus(404);
+// });
 
 // LISTENING PORT
 app.listen(PORT, err => {
