@@ -21,6 +21,7 @@ module.exports = {
             if (err) res.json({ success: false, payload: null, code: err.code })
             const token = signToken(newUser)
             res.json({ success: true, token })
+            // res.json({ success: true, payload: newUser })
         })
     },
     update: (req, res) => {
