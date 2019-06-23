@@ -1,54 +1,84 @@
 // Require constants
 const
-    User = require('../models/User.js'),
-    signToken = require('../serverAuth').signToken;
+    User = require('../models/User'),
+    Project = require('../models/Project');
 
-// Export modules:
-    module.exports = {
-        index: (req, res) => {
-            User.find({}, (err, users) => {
-                if (err) res.json({ success: false, payload: null, code: err.code })
-                res.json({ success: true, payload: users })
+// Export controls
+module.exports = {
+    // Create Project COMPLETED
+    create: (req, res) => {
+        User.findById(req.params.id, (err, user) => {
+            if (err) { res.json({ success: false, err })}
+            console.log(user)
+            user.projects.push.(req.body)
+            user.save(err => {
+                if (err) res.json({ success: false, err })
+                res.json({ success: true, user})
             })
-        },
-        show: (req, res) => {
-            User.findById(req.params.id, (err, user) => {
-                res.json({ success: true, payload: user })
-            })
-        },
-        create: (req, res) => {
-            User.create(req.body, (err, newUser) => {
-                if (err) res.json({ success: false, payload: null, code: err.code })
-                const token = signToken(newUser)
-                res.json({ success: true, token })
-            })
-        },
-        update: (req, res) => {
-            console.log(req.params)
-            User.findById(req.params.id, (err, updatedUser) => {
-                if (!req.body.password) delete req.body.password
-                console.log(res.data)
-                Object.assign(updatedUser, req.body)
-                updatedUser.save(( err, updatedUser ) => {
-                    if (err) res.json({ success: false, payload: null, code: err.code })
-                    res.json({ success: true, payload: updatedUser })
+        })
+    },
+    // Index all projects
+    index: (req, res) => {
+        User.findById(req.params.id, (err, user) => {
+            if (err) { res.json({ success: false, err })}
+            else {
+                let projects = user.projects
+                res.json({ success: true, projects })
+            }
+        })
+    },
+    // Show 1 project
+    show: (req, res, next) => {
+        let { id, proj_id } = req.params;
+        User.findById(id, (err, user) => {
+            if (err) { res.json({ success: false, err })}
+            else {
+                let project = user.projects.id(proj_id)
+                Object.assign(project, req.body)
+                project = { ...project, ...req.body }
+                console.log(project)
+                return user.save(err => {
+                    if (err) res.json({ success: false, err })
+                    res.json({ success: true, project })
                 })
-            })
-        },
-        destroy: (req, res) => {
-            User.findByIdAndRemove(req.params.id, (err, deletedUser) => {
-                if (err) res.json({ success: false, payload: null, code: err.code })
-                res.json({ success: true, payload: deletedUser })
-            })
-        },
-        authenticate: (req, res) => {
-            let { email, password } = req.body;
-            User.findOne({ email }, (err, authenticatedUser) => {
-                if (!authenticatedUser || !authenticatedUser.validPassword(password)) {
-                    return res.json({ success: false, message: 'INVALID CREDENTIALS' })
-                }
-                const token = signToken(authenticatedUser);
-                res.json({ success: true, token })
-            })
-        }
+            }
+        })
+    },
+    // Update project
+    update: (rea, res) => {
+        let { id, proj_id } = req.params;
+        User.findById(id, (err, user) => {
+            if (err) {res.json({ success: false, err })}
+            else {
+                let project = user.projects.id(proj_id)
+                Object.assign(project, req.body)
+                // project = { ...project, ...req.body }
+                console.log(project)
+                return user.save(err => {
+                    if (err) res.json({ success: false, err })
+                    res.json({ success: true, project})
+                })
+            }
+        })
+    },
+    // Destroy project
+    destroy: (req, res) => {
+        let { id, proj_id } = req.params;
+        User.findById(id, (err, user) => {
+            if (err) {res.json({ success: false, err })}
+            else {
+                // user.projects.id(p)
+                let projIndex = user.projects.indexOf(proj_id)
+                console.log(projIndex)
+                user.projects.splice(projIndex, 1)
+                user.save(err => {
+                    if (err) res.json({ success: false, err })
+                    res.json({ success: true, message: 'Project has been deleted.'})
+                })
+                // let project = user.resume.projects.id(proj_id);
+                // project.remove();
+                // return user.save();
+            }
+        })
     }
+}
