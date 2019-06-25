@@ -11,6 +11,8 @@ const
     // flash = require('connect-flash'),
     mongoose = require('mongoose'),
     cors = require('cors'),
+    bcrytjs = require('bcryptjs'),
+    User = require('./models/User.js'),
     usersRoutes = require('./routers/users.js'),
     // projectsRoutes = require('./routes/projects.js'),
     MONGODB_URI = process.env.MONGODB_URI,
@@ -40,6 +42,18 @@ app.get('/api', (req, res) => {
 // Require usersRouter
 const usersRouter = require('./routers/users');
 app.use('/api/users', usersRouter);
+app.post('/register', async (request, response) => {});
+app.post('/login', async (request, response) => {});
+
+app.get('/dump', async (request, response) => {
+    try {
+        var result = await User.find().exec();
+        response.send(result);
+    } catch (error) {
+        response.status(500).send(error);
+    }
+});
+
 // // Require projectsRouter
 // const projectsRouter = require('./routers/projects');
 // app.use('/api/users/:id/projects', projectsRouter);

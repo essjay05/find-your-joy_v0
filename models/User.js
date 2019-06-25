@@ -34,6 +34,16 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 // Generate/bcrypt password
+bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(newUser.password.salt, (err, hash) => {
+        if (err) throw err;
+        newUser.password = hash;
+        newUser 
+            .save()
+            .then(user => resizeBy.json(user))
+            .catch(user => console.log(err))
+    });
+});
 
 // Check valid password
 
